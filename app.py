@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 import os
 from utils.extract_audio import extract_audio_from_video
 from utils.transcribe import transcribe_audio
