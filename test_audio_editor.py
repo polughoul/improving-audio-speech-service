@@ -7,7 +7,7 @@ marks = [
     {"start": 4.0, "end": 5.5}
 ]
 
-censor_audio("test.wav", marks, action="beep", beep_path="utils/beep.wav")
+censor_audio("test.wav", marks, action="beep", beep_path="beep.wav")
 print("Audio censored successfully.")
 
 
