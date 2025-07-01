@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Speech Cleaner</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Speech Cleaner</h1>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="audio/*,video/*" required>
+            <button type="submit">find bad words</button>
+        </form>
+        {% if transcript %}
+            <h2>Result:</h2>
+            <ul>
+            {% for mark in marks %}
+                <li>{{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} сек)</li>
+            {% endfor %}
+            </ul>
+            {% if censored_path %}
+                <a href="{{ url_for('static', filename=censored_path.split('/')[-1]) }}" download>Download new file</a>
+            {% endif %}
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+    <footer>
+        <p>© 2025 AI Speech Cleaner. All rights reserved</p>
+    </footer>
+</body>
+</html>

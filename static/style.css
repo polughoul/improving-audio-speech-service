@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 400px;
+    margin: 60px auto 0 auto;
+    background: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    text-align: center;
+}
+h1 {
+    margin-bottom: 24px;
+}
+input[type="file"] {
+    margin-bottom: 16px;
+}
+button {
+    background: #4f8cff;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover {
+    background: #2563eb;
+}
+footer {
+    margin-top: 60px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+.flashes {
+    color: #e53e3e;
+    margin-top: 16px;
+    list-style: none;
+    padding: 0;
+}

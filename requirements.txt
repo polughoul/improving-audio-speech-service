@@ -3,4 +3,3 @@ moviepy
 pydub
 openai-whisper
 rapidfuzz
-torch
