@@ -2,7 +2,8 @@ from rapidfuzz import fuzz
 import re
 
 BAD_WORDS = [
-    "блин", "черт", "срань", "жопа", "хрен", "сука", "мать", "пипец", "нахрен", "пиздец", "бля", "ебать", "еблан", "ахуеть", "хуй", "хуйня", "блять", "ахуел", "пидорас", "уебан"
+    "блин", "черт", "срань", "жопа", "хрен", "сука", "мать", "пипец", "нахрен", "пиздец", "бля", "ебать", "еблан", "ахуеть", "хуй", "хуйня", "блять", "ахуел", "пидорас", "уебан",
+    "bastard", "fucked-up", "fucking", "damn", "shit", "goddamn", "asshole", "son of a bitch", "motherfucker", "bullshit", "piece of shit", "dickhead", "moron", "fuck", "shithead", "fucker", "dumb fuck"
 ]
 
 BADWORD_RE = re.compile(r'\b\w+\b', re.IGNORECASE)
