@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, flash
+from flask import Flask, request, render_template, jsonify, redirect, url_for, flash, send_from_directory
 import os
 from utils.extract_audio import extract_audio_from_video
 from utils.transcribe import transcribe_audio
@@ -30,8 +30,15 @@ def index():
         marks = find_parasites(transcript)
         censored_path = censor_audio(audio_path, marks, action="beep", beep_path="beep.wav") if marks else None
 
-        return render_template('index.html', transcript=transcript, marks=marks, censored_path=censored_path, filename=filename)
+        censored_filename = os.path.basename(censored_path) if censored_path else None
+        return render_template('index.html', transcript=transcript, marks=marks, censored_path=censored_path, censored_filename=censored_filename, filename=filename)
     return render_template('index.html')
+
+
+@app.route('/download/<path:filename>')
+def download_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

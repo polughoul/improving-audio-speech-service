@@ -16,11 +16,11 @@
             <h2>Result:</h2>
             <ul>
             {% for mark in marks %}
-                <li>{{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} сек)</li>
+                <li>{{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} sec)</li>
             {% endfor %}
             </ul>
             {% if censored_path %}
-                <a href="{{ url_for('static', filename=censored_path.split('/')[-1]) }}" download>Download new file</a>
+                <a href="{{ url_for('download_file', filename=censored_filename) }}" download>Download new file</a>
             {% endif %}
         {% endif %}
 
