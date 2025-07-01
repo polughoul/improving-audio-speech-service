@@ -6,8 +6,12 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <a href="{{ url_for('index') }}" class="site-title">AI Speech Cleaner</a>
+        </div>
+    </header>
     <div class="container">
-        <h1>AI Speech Cleaner</h1>
         <form method="post" enctype="multipart/form-data">
             <input type="file" name="file" accept="audio/*,video/*" required>
             <button type="submit">find bad words</button>
@@ -35,7 +39,9 @@
         {% endwith %}
     </div>
     <footer>
-        <p>© 2025 AI Speech Cleaner. All rights reserved</p>
+        <div class="footer-content">
+            <p>© 2025 AI Speech Cleaner. All rights reserved</p>
+        </div>
     </footer>
 </body>
 </html>
