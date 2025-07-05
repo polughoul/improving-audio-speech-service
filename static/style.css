@@ -66,21 +66,43 @@ header {
 
 .container {
     max-width: 400px;
-    margin: 60px auto 0 auto;
+    margin: 60px auto 40px auto;
     background: #fff;
-    padding: 32px 24px;
+    padding: 32px 24px 24px 24px;
     border-radius: 12px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     text-align: center;
-    flex: 1 0 auto;
 }
 
 h2 {
     margin-top: 32px;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
 input[type="file"] {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+}
+
+label[for="out_format"] {
+    margin-bottom: 4px;
+    font-size: 15px;
+    color: #222;
+}
+
+select#out_format {
+    padding: 7px 16px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 15px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    color: #222;
 }
 
 button {
@@ -91,6 +113,7 @@ button {
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 9px;
 }
 
 button:hover {
