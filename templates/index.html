@@ -19,37 +19,63 @@
         </div>
     </header>
     <div class="container">
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept="audio/*,video/*" required>
-            <label for="out_format">Select the format of cencored file: </label>
-            <select name="out_format" id="out_format">
-                <option value="wav">WAV</option>
-                <option value="mp3">MP3</option>
-                <option value="ogg">OGG</option>
-                <option value="flac">FLAC</option>
-            </select>
-            <button type="submit">Find bad words</button>
-        </form>
-        {% if transcript %}
+        {% if not transcript and not censored_path %}
+            <form method="post" enctype="multipart/form-data" id="badwords-form">
+                <label class="file-upload-label">
+                    <input type="file" name="file" accept="audio/*,video/*" required>
+                    <span>
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg>
+                        <span id="file-upload-text">download file</span>
+                    </span>
+                </label>
+                <label for="out_format">Select the format of cencored file: </label>
+                <select name="out_format" id="out_format">
+                    <option value="wav">WAV</option>
+                    <option value="mp3">MP3</option>
+                    <option value="ogg">OGG</option>
+                    <option value="flac">FLAC</option>
+                </select>
+                <button type="submit">Find bad words</button>
+            </form>
+        {% endif %}
+
+        {% if transcript and not censored_path %}
             <h2>Result:</h2>
-            <ul>
-            {% for mark in marks %}
-                <li>{{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} sec)</li>
-            {% endfor %}
-            </ul>
-            {% if censored_path %}
-                <a href="{{ url_for('download_file', filename=censored_filename) }}" download>Download new file</a>
-            {% endif %}
+            <form method="post" enctype="multipart/form-data" id="marks-form">
+                <ul id="marks-list">
+                {% for mark in marks %}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="selected_marks" value="{{ loop.index0 }}" checked>
+                            {{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} sec)
+                        </label>
+                    </li>
+                {% endfor %}
+                </ul>
+                <button type="button" id="select-all-btn">Select all</button>
+                <button type="submit">Mute selected</button>
+                <input type="hidden" name="file" value="{{ filename }}">
+                <input type="hidden" name="out_format" value="{{ request.form.get('out_format', 'wav') }}">
+            </form>
+        {% endif %}
+
+        {% if censored_path %}
+            <h2>Preview:</h2>
+            <audio controls style="width:100%;margin-bottom:18px;">
+                <source src="{{ url_for('download_file', filename=censored_filename) }}" type="audio/{{ censored_filename.split('.')[-1] }}">
+                Your browser does not support the audio element.
+            </audio>
+            <a href="{{ url_for('download_file', filename=censored_filename) }}" class="download-btn" download>Download new file</a>
         {% endif %}
 
         {% with messages = get_flashed_messages() %}
-          {% if messages %}
+        {% if messages %}
             <ul class="flashes">
-              {% for message in messages %}
+            {% for message in messages %}
                 <li>{{ message }}</li>
-              {% endfor %}
+            {% endfor %}
             </ul>
-          {% endif %}
+        {% endif %}
         {% endwith %}
     </div>
     <footer>
@@ -57,5 +83,17 @@
             <p>© 2025 AI Speech Cleaner. All rights reserved</p>
         </div>
     </footer>
+
+    <script>
+    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name || "Download file";
+        document.getElementById('file-upload-text').textContent = fileName;
+    });
+    </script>
+    <script>
+    document.getElementById('select-all-btn')?.addEventListener('click', function() {
+        document.querySelectorAll('#marks-list input[type="checkbox"]').forEach(cb => cb.checked = true);
+    });
+    </script>
 </body>
 </html>

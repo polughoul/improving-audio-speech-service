@@ -14,13 +14,30 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def index():
     if request.method == 'POST':
         file = request.files.get('file')
-        if not file:
-            flash('Choose file!')
-            return redirect(url_for('index'))
-        filename = file.filename
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(file_path)
+        if file:
+            filename = file.filename
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(file_path)
 
+            if filename.lower().endswith(('.mp4', '.mov', '.avi', '.mkv')):
+                audio_path = extract_audio_from_video(file_path)
+            else:
+                audio_path = file_path
+
+            transcript = transcribe_audio(audio_path)
+            marks = find_parasites(transcript)
+            out_format = request.form.get('out_format', 'wav')
+            return render_template(
+                'index.html',
+                transcript=transcript,
+                marks=marks,
+                filename=filename,
+                out_format=out_format
+            )
+
+        filename = request.form.get('file')
+        out_format = request.form.get('out_format', 'wav')
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
         if filename.lower().endswith(('.mp4', '.mov', '.avi', '.mkv')):
             audio_path = extract_audio_from_video(file_path)
         else:
@@ -28,12 +45,20 @@ def index():
 
         transcript = transcribe_audio(audio_path)
         marks = find_parasites(transcript)
-        out_format = request.form.get('out_format', 'wav')
-        
+        selected = request.form.getlist('selected_marks')
+        if selected:
+            marks = [marks[int(i)] for i in selected]
         censored_path = censor_audio(audio_path, marks, action="beep", beep_path="beep.wav", out_format=out_format) if marks else None
-
         censored_filename = os.path.basename(censored_path) if censored_path else None
-        return render_template('index.html', transcript=transcript, marks=marks, censored_path=censored_path, censored_filename=censored_filename, filename=filename)
+        return render_template(
+            'index.html',
+            transcript=transcript,
+            marks=marks,
+            censored_path=censored_path,
+            censored_filename=censored_filename,
+            filename=filename
+        )
+
     return render_template('index.html')
 
 
