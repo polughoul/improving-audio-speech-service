@@ -28,7 +28,9 @@ def index():
 
         transcript = transcribe_audio(audio_path)
         marks = find_parasites(transcript)
-        censored_path = censor_audio(audio_path, marks, action="beep", beep_path="beep.wav") if marks else None
+        out_format = request.form.get('out_format', 'wav')
+        
+        censored_path = censor_audio(audio_path, marks, action="beep", beep_path="beep.wav", out_format=out_format) if marks else None
 
         censored_filename = os.path.basename(censored_path) if censored_path else None
         return render_template('index.html', transcript=transcript, marks=marks, censored_path=censored_path, censored_filename=censored_filename, filename=filename)

@@ -21,7 +21,14 @@
     <div class="container">
         <form method="post" enctype="multipart/form-data">
             <input type="file" name="file" accept="audio/*,video/*" required>
-            <button type="submit">find bad words</button>
+            <label for="out_format">Select the format of cencored file: </label>
+            <select name="out_format" id="out_format">
+                <option value="wav">WAV</option>
+                <option value="mp3">MP3</option>
+                <option value="ogg">OGG</option>
+                <option value="flac">FLAC</option>
+            </select>
+            <button type="submit">Find bad words</button>
         </form>
         {% if transcript %}
             <h2>Result:</h2>

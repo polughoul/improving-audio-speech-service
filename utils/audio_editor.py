@@ -1,8 +1,8 @@
 from pydub import AudioSegment
 import os
 
-def censor_audio(audio_path, marks, action="beep", beep_path="beep.wav"):
-    audio = AudioSegment.from_wav(audio_path)
+def censor_audio(audio_path, marks, action="beep", beep_path="beep.wav", out_format="wav"):
+    audio = AudioSegment.from_file(audio_path)
     result = AudioSegment.empty()
 
     current_pos = 0
@@ -21,7 +21,8 @@ def censor_audio(audio_path, marks, action="beep", beep_path="beep.wav"):
         current_pos = end_ms
     result += audio[current_pos:]
 
-    censored_path = audio_path.replace(".wav", f"_{action}.wav")
-    result.export(censored_path, format="wav")
+    base, _ = os.path.splitext(audio_path)
+    censored_path = f"{base}_{action}.{out_format}"
+    result.export(censored_path, format=out_format)
 
     return censored_path
