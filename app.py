@@ -1,9 +1,6 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for, flash, send_from_directory
 import os
-from utils.extract_audio import extract_audio_from_video
-from utils.transcribe import transcribe_audio
-from utils.markers import find_parasites
-from utils.audio_editor import censor_audio
+from utils import extract_audio_from_video, transcribe_audio, find_parasites, censor_audio
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -37,6 +34,8 @@ def index():
 
         filename = request.form.get('file')
         out_format = request.form.get('out_format', 'wav')
+        action = request.form.get('action', 'beep')
+        funny_sound = request.form.get('funny_sound', 'sounds/duck.wav')
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         if filename.lower().endswith(('.mp4', '.mov', '.avi', '.mkv')):
             audio_path = extract_audio_from_video(file_path)
@@ -48,7 +47,12 @@ def index():
         selected = request.form.getlist('selected_marks')
         if selected:
             marks = [marks[int(i)] for i in selected]
-        censored_path = censor_audio(audio_path, marks, action="beep", beep_path="beep.wav", out_format=out_format) if marks else None
+
+        if action == 'funny':
+            beep_path = funny_sound
+        else:
+            beep_path = "sounds/beep.wav"
+        censored_path = censor_audio(audio_path, marks, action=action, beep_path=beep_path, out_format=out_format) if marks else None
         censored_filename = os.path.basename(censored_path) if censored_path else None
         return render_template(
             'index.html',

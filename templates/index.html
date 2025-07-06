@@ -18,106 +18,97 @@
             </nav>
         </div>
     </header>
-    <div class="container">
-        {% if not transcript and not censored_path %}
-            <form method="post" enctype="multipart/form-data" id="badwords-form">
-                <label class="file-upload-label">
-                    <input type="file" name="file" accept="audio/*,video/*" required>
-                    <span>
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg>
-                        <span id="file-upload-text">download file</span>
-                    </span>
-                </label>
-                <label for="out_format">Select the format of cencored file: </label>
-                <select name="out_format" id="out_format">
-                    <option value="wav">WAV</option>
-                    <option value="mp3">MP3</option>
-                    <option value="ogg">OGG</option>
-                    <option value="flac">FLAC</option>
-                </select>
-                <button type="submit">Find bad words</button>
-            </form>
-        {% endif %}
+    <div class="service-title">
+        <h1>AI Speech Cleaner</h1>
+        <div class="service-desc">
+            An online service for automatic detection and censoring of profane words in audio and video.
+        </div>
+    </div>
+    <div class = "main-wrapper">
+        <div class="container">
+            {% if not transcript and not censored_path %}
+                <form method="post" enctype="multipart/form-data" id="badwords-form">
+                    <label class="file-upload-label">
+                        <input type="file" name="file" accept="audio/*,video/*" required>
+                        <span>
+                            <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg>
+                            <span id="file-upload-text"></span>
+                        </span>
+                    </label>
+                    <label for="out_format">Select the format of cencored file: </label>
+                    <select name="out_format" id="out_format">
+                        <option value="wav">WAV</option>
+                        <option value="mp3">MP3</option>
+                        <option value="ogg">OGG</option>
+                        <option value="flac">FLAC</option>
+                    </select>
+                    <button type="submit">Find bad words</button>
+                </form>
+            {% endif %}
 
-        {% if transcript and not censored_path %}
-            <h2>Result:</h2>
-            <form method="post" enctype="multipart/form-data" id="marks-form">
-                <ul id="marks-list">
-                {% for mark in marks %}
-                    <li>
-                        <label>
-                            <input type="checkbox" name="selected_marks" value="{{ loop.index0 }}" checked>
-                            {{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} sec)
-                        </label>
-                    </li>
+            {% if transcript and not censored_path %}
+                <h2>Result:</h2>
+                <form method="post" enctype="multipart/form-data" id="marks-form">
+                    <ul id="marks-list">
+                    {% for mark in marks %}
+                        <li>
+                            <label>
+                                <input type="checkbox" name="selected_marks" value="{{ loop.index0 }}" checked>
+                                {{ mark.text }} ({{ "%.2f"|format(mark.start) }} - {{ "%.2f"|format(mark.end) }} sec)
+                            </label>
+                        </li>
+                    {% endfor %}
+                    </ul>
+
+                    <label for = "action" class= "action-label">Select what do with words:</label>
+                    <select name = "action" id = "action" class = "action-select">
+                        <option value = "beep">BEEP</option>
+                        <option value = "mute">MUTE</option>
+                        <option value = "cut">CUT</option>
+                        <option value = "funny">REPLACE TO...</option>
+                    </select>
+
+                    <div id="funny-sound-select" style="display:none;">
+                        <label for="funny_sound">Select sound:</label>
+                        <select name="funny_sound" id="funny_sound">
+                            <option value="dolphin.wav">dolphin</option>
+                            <option value="duck.wav">duck</option>
+                            <option value="nut.wav">nut</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="select-all-btn">Select all</button>
+                    <button type="submit">Mute selected</button>
+                    <input type="hidden" name="file" value="{{ filename }}">
+                    <input type="hidden" name="out_format" value="{{ request.form.get('out_format', 'wav') }}">
+                </form>
+            {% endif %}
+
+            {% if censored_path %}
+                <h2>Preview:</h2>
+                <audio controls style="width:100%;margin-bottom:18px;">
+                    <source src="{{ url_for('download_file', filename=censored_filename) }}" type="audio/{{ censored_filename.split('.')[-1] }}">
+                    Your browser does not support the audio element.
+                </audio>
+                <a href="{{ url_for('download_file', filename=censored_filename) }}" class="download-btn" download>Download file</a>
+            {% endif %}
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
                 {% endfor %}
                 </ul>
-
-                <label for = "action" class= "action-label">Select what do with words:</label>
-                <select name = "action" id = "action" class = "action-select">
-                    <option value = "beep">BEEP</option>
-                    <option value = "mute">MUTE</option>
-                    <option value = "cut">CUT</option>
-                    <option value = "funny">REPLACE TO...</option>
-                </select>
-
-                <div id="funny-sound-select" style="display:none;">
-                    <label for="funny_sound">Select sound:</label>
-                    <select name="funny_sound" id="funny_sound">
-                        <option value="meow.wav">1</option>
-                        <option value="duck.wav">2</option>
-                        <option value="drum.wav">3</option>
-                    </select>
-                </div>
-
-                <button type="button" id="select-all-btn">Select all</button>
-                <button type="submit">Mute selected</button>
-                <input type="hidden" name="file" value="{{ filename }}">
-                <input type="hidden" name="out_format" value="{{ request.form.get('out_format', 'wav') }}">
-            </form>
-        {% endif %}
-
-        {% if censored_path %}
-            <h2>Preview:</h2>
-            <audio controls style="width:100%;margin-bottom:18px;">
-                <source src="{{ url_for('download_file', filename=censored_filename) }}" type="audio/{{ censored_filename.split('.')[-1] }}">
-                Your browser does not support the audio element.
-            </audio>
-            <a href="{{ url_for('download_file', filename=censored_filename) }}" class="download-btn" download>Download new file</a>
-        {% endif %}
-
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% endwith %}
+            {% endif %}
+            {% endwith %}
+        </div>
     </div>
     <footer>
         <div class="footer-content">
             <p>© 2025 AI Speech Cleaner. All rights reserved</p>
         </div>
     </footer>
-
-    <script>
-    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
-        const fileName = e.target.files[0]?.name || "Download file";
-        document.getElementById('file-upload-text').textContent = fileName;
-    });
-    </script>
-    <script>
-    document.getElementById('select-all-btn')?.addEventListener('click', function() {
-        document.querySelectorAll('#marks-list input[type="checkbox"]').forEach(cb => cb.checked = true);
-    });
-    </script>
-    <script>
-        document.getElementById('action')?.addEventListener('change', function() {
-            document.getElementById('funny-sound-select').style.display =
-                this.value === 'funny' ? 'block' : 'none';
-        });
-    </script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
