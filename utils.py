@@ -1,9 +1,19 @@
 import os
+import json
 from moviepy import *
 import whisper
 from rapidfuzz import fuzz
 import re
 from pydub import AudioSegment
+
+
+# --- load badwords from JSON ---
+def load_badwords(path="badwords.json"):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    return data["ru"], data["en"]
+
+BAD_WORDS_RU, BAD_WORDS_EN = load_badwords()
 
 # --- extract_audio_from_video ---
 def extract_audio_from_video(video_path):
@@ -27,23 +37,35 @@ def transcribe_audio(audio_path):
     return transcript
 
 # --- find_parasites ---
-BAD_WORDS = [
-    "блин", "черт", "срань", "жопа", "хрен", "сука", "мать", "пипец", "нахрен", "пиздец", "бля", "ебать", "еблан", "ахуеть", "хуй", "хуйня", "блять", "ахуел", "пидорас", "уебан",
-    "bastard", "fucked-up", "fucking", "damn", "shit", "goddamn", "asshole", "son of a bitch", "motherfucker", "bullshit", "piece of shit", "dickhead", "moron", "fuck", "shithead", "fucker", "dumb fuck"
-]
-BADWORD_RE = re.compile(r'\b\w+\b', re.IGNORECASE)
+BADWORD_RE_RU = re.compile(r'\b[а-яА-ЯёЁ]+\b', re.IGNORECASE)
+BADWORD_RE_EN = re.compile(r'\b[a-zA-Z]+\b', re.IGNORECASE)
 
-def find_parasites(transcript_segments, threshold=85):
+def find_parasites(transcript_segments, threshold_ru=85, threshold_en=90):
     marked = []
     for seg in transcript_segments:
         text = seg['text']
         seg_start = seg['start']
         seg_end = seg['end']
         duration = seg_end - seg_start
-        for match in BADWORD_RE.finditer(text):
+        for match in BADWORD_RE_RU.finditer(text):
             word = match.group()
-            for bad in BAD_WORDS:
-                if fuzz.ratio(word.lower(), bad) >= threshold:
+            for bad in BAD_WORDS_RU:
+                if fuzz.ratio(word.lower(), bad) >= threshold_ru:
+                    start_char = match.start()
+                    end_char = match.end()
+                    word_start = seg_start + (start_char / len(text)) * duration
+                    word_end = seg_start + (end_char / len(text)) * duration
+                    marked.append({
+                        "start": word_start,
+                        "end": word_end,
+                        "text": word,
+                        "bad_words": [bad]
+                    })
+                    break
+        for match in BADWORD_RE_EN.finditer(text):
+            word = match.group()
+            for bad in BAD_WORDS_EN:
+                if fuzz.ratio(word.lower(), bad) >= threshold_en:
                     start_char = match.start()
                     end_char = match.end()
                     word_start = seg_start + (start_char / len(text)) * duration

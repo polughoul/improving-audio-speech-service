@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, flash, send_from_directory
+from flask import Flask, request, render_template, send_from_directory
 import os
 from utils import extract_audio_from_video, transcribe_audio, find_parasites, censor_audio
 

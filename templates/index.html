@@ -60,25 +60,29 @@
                     {% endfor %}
                     </ul>
 
-                    <label for = "action" class= "action-label">Select what do with words:</label>
-                    <select name = "action" id = "action" class = "action-select">
-                        <option value = "beep">BEEP</option>
-                        <option value = "mute">MUTE</option>
-                        <option value = "cut">CUT</option>
-                        <option value = "funny">REPLACE TO...</option>
-                    </select>
-
-                    <div id="funny-sound-select" style="display:none;">
-                        <label for="funny_sound">Select sound:</label>
-                        <select name="funny_sound" id="funny_sound">
-                            <option value="dolphin.wav">dolphin</option>
-                            <option value="duck.wav">duck</option>
-                            <option value="nut.wav">nut</option>
-                        </select>
+                    <div class="actions-row">
+                        <div class="action-col">
+                            <label for="action" class="action-label">Select what do with words:</label>
+                            <select name="action" id="action" class="action-select">
+                                <option value="beep">BEEP</option>
+                                <option value="mute">MUTE</option>
+                                <option value="cut">CUT</option>
+                                <option value="funny">REPLACE TO...</option>
+                            </select>
+                        </div>
+                        <div class="action-col" id="funny-sound-select" style="display:none;">
+                            <label for="funny_sound" class="action-label">Select sound:</label>
+                            <select name="funny_sound" id="funny_sound" class="action-select">
+                                <option value="sounds/dolphin.wav">dolphin</option>
+                                <option value="sounds/duck.wav">duck</option>
+                                <option value="sounds/nut.wav">nut</option>
+                            </select>
+                        </div>
+                        <div class="action-col actions-btns">
+                            <button type="button" id="select-all-btn">Select all</button>
+                            <button type="submit">Mute selected</button>
+                        </div>
                     </div>
-
-                    <button type="button" id="select-all-btn">Select all</button>
-                    <button type="submit">Mute selected</button>
                     <input type="hidden" name="file" value="{{ filename }}">
                     <input type="hidden" name="out_format" value="{{ request.form.get('out_format', 'wav') }}">
                 </form>
@@ -86,11 +90,13 @@
 
             {% if censored_path %}
                 <h2>Preview:</h2>
-                <audio controls style="width:100%;margin-bottom:18px;">
-                    <source src="{{ url_for('download_file', filename=censored_filename) }}" type="audio/{{ censored_filename.split('.')[-1] }}">
-                    Your browser does not support the audio element.
-                </audio>
-                <a href="{{ url_for('download_file', filename=censored_filename) }}" class="download-btn" download>Download file</a>
+                <div class="audio-download-block">
+                    <audio controls>
+                        <source src="{{ url_for('download_file', filename=censored_filename) }}" type="audio/{{ censored_filename.split('.')[-1] }}">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <a href="{{ url_for('download_file', filename=censored_filename) }}" class="download-btn" download>Download file</a>
+                </div>
             {% endif %}
 
             {% with messages = get_flashed_messages() %}
