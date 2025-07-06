@@ -192,3 +192,28 @@ footer {
     margin: 0 auto;
     font-size: 15px;
 }
+
+.action-label {
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-size: 15px;
+    color: #222;
+    display: block;
+    text-align: left;
+    width: 100%;
+}
+
+.action-select, #funny_sound {
+    padding: 7px 16px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 15px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    color: #222;
+    width: 100%;
+    max-width: 260px;
+}
+#funny-sound-select {
+    margin-bottom: 8px;
+}

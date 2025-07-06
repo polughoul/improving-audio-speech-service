@@ -52,6 +52,24 @@
                     </li>
                 {% endfor %}
                 </ul>
+
+                <label for = "action" class= "action-label">Select what do with words:</label>
+                <select name = "action" id = "action" class = "action-select">
+                    <option value = "beep">BEEP</option>
+                    <option value = "mute">MUTE</option>
+                    <option value = "cut">CUT</option>
+                    <option value = "funny">REPLACE TO...</option>
+                </select>
+
+                <div id="funny-sound-select" style="display:none;">
+                    <label for="funny_sound">Select sound:</label>
+                    <select name="funny_sound" id="funny_sound">
+                        <option value="meow.wav">1</option>
+                        <option value="duck.wav">2</option>
+                        <option value="drum.wav">3</option>
+                    </select>
+                </div>
+
                 <button type="button" id="select-all-btn">Select all</button>
                 <button type="submit">Mute selected</button>
                 <input type="hidden" name="file" value="{{ filename }}">
@@ -94,6 +112,12 @@
     document.getElementById('select-all-btn')?.addEventListener('click', function() {
         document.querySelectorAll('#marks-list input[type="checkbox"]').forEach(cb => cb.checked = true);
     });
+    </script>
+    <script>
+        document.getElementById('action')?.addEventListener('change', function() {
+            document.getElementById('funny-sound-select').style.display =
+                this.value === 'funny' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
