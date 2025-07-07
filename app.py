@@ -1,10 +1,11 @@
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, flash
 import os
 from utils import (
     extract_audio_from_video,
     transcribe_audio,
     find_parasites,
     censor_audio,
+    allowed_file,
 )
 
 app = Flask(__name__)
@@ -19,6 +20,11 @@ def index():
         file = request.files.get("file")
         if file:
             filename = file.filename
+            if not allowed_file(filename):
+                flash(
+                    "Unsupported file type. Allowed: wav, mp3, ogg, flac, mp4, mov, avi, mkv."
+                )
+                return render_template("index.html")
             file_path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(file_path)
 
@@ -85,6 +91,16 @@ def index():
 @app.route("/download/<path:filename>")
 def download_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template("500.html"), 500
 
 
 if __name__ == "__main__":

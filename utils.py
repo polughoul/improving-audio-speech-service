@@ -6,6 +6,8 @@ from rapidfuzz import fuzz
 import re
 from pydub import AudioSegment
 
+ALLOWED_EXTENSIONS = {"wav", "mp3", "ogg", "flac", "mp4", "mov", "avi", "mkv"}
+
 
 # --- load badwords from JSON ---
 def load_badwords(path="badwords.json"):
@@ -122,3 +124,8 @@ def censor_audio(
     censored_path = f"{base}_{action}.{out_format}"
     result.export(censored_path, format=out_format)
     return censored_path
+
+
+# --- validation for input file  ---
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
