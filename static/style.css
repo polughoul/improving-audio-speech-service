@@ -74,8 +74,8 @@ header {
 
 
 .container {
-    width: 1100px;          
-    min-height: 320px;
+    width: 900px;          
+    min-height: 240px;
     margin: 40px auto;
     background: #fff;
     padding: 48px 80px;
@@ -188,61 +188,107 @@ button:hover {
     padding: 0;
 }
 
-.file-upload-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 10px 18px;
-    cursor: pointer;
-    margin-bottom: 8px;
-    font-size: 15px;
-    color: #222;
-    transition: border 0.2s;
-}
+
 .file-upload-label:hover {
     border: 1.5px solid #4f8cff;
 }
-.file-upload-label input[type="file"] {
-    display: none;
+
+.file-upload-label {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 18px 24px 10px 24px;
+    cursor: pointer;
+    font-size: 17px;
+    color: #222;
+    min-width: 120px;
 }
-#file-upload-text {
-    vertical-align: middle;
+.file-upload-label input[type="file"] {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-upload-text {
+    margin-top: 6px;
+    font-size: 1.08rem;
+    color: #222;
+    text-align: center;
+    min-width: 80px;
+}
+
+.file-upload-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-form-col label,
+.upload-form-col select {
+    font-size: 1.15rem;
+}
+
+.upload-form-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
 #badwords-form {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 28px;
+    align-items: flex-end;
+    gap: 32px;
     justify-content: center;
     margin-bottom: 24px;
     flex-wrap: wrap;
-    font-size: 1.15rem;
+    width: 100%;
 }
+
+@media (max-width: 700px) {
+    #badwords-form {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+}
+
 #badwords-form .file-upload-label svg {
     width: 36px;
     height: 36px;
 }
-#badwords-form select,
-#badwords-form button {
+#badwords-form select {
     font-size: 1.1rem;
     padding: 12px 24px;
+}
+
+#badwords-form button {
+    font-size: 1.15rem;
+    padding: 12px 32px;
+    margin-top: 0;
+    align-self: center;
 }
 
 
 #marks-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 32px 0;
-    display: flex;
-    flex-direction: row;
-    gap: 18px;
+    margin: 0 auto 32px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 32px; 
+    max-width: 900px;
     justify-content: center;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    justify-items: center;
 }
 
 #marks-list li {
@@ -252,7 +298,11 @@ button:hover {
     font-size: 1.08rem;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     min-width: 180px;
+    max-width: 260px;
+    width: 100%;
+    text-align: left;
     box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
 
@@ -272,6 +322,12 @@ button:hover {
 
 #marks-form button[type="submit"] {
     margin-right: 0;
+}
+#marks-list label {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -299,7 +355,17 @@ footer {
     margin-top: 0;
     width: 100%;
     max-width: 320px;
-    align-self: flex-start;
+    align-self: center;
+    text-align: left;
+}
+
+.action-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    min-width: 180px;
+    width: 100%;
+    margin-bottom: 0;
 }
 
 .action-label {
@@ -308,7 +374,7 @@ footer {
     font-size: 15px;
     color: #222;
     display: block;
-    text-align: left;
+    text-align: center;
     width: 100%;
     padding-left: 2px;
 }
@@ -324,31 +390,32 @@ footer {
     width: 100%;
     max-width: 260px;
 }
-#funny-sound-select {
-    margin-bottom: 8px;
-}
-
 .actions-row {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 32px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-}
-.action-col {
-    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    min-width: 180px;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+
+#funny-sound-select {
+    margin-top: 0;
+    margin-bottom: 8px;
+    width: 100%;
+    display: none;
 }
 .actions-btns {
+    display: flex;
     flex-direction: row;
-    align-items: flex-end;
-    gap: 10px;
+    gap: 18px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 18px;
 }
+
 .actions-btns button {
-    margin: 0 0 0 0;
     min-width: 140px;
+    font-size: 1.08rem;
 }

@@ -13,39 +13,44 @@ def load_badwords(path="badwords.json"):
         data = json.load(f)
     return data["ru"], data["en"]
 
+
 BAD_WORDS_RU, BAD_WORDS_EN = load_badwords()
+
 
 # --- extract_audio_from_video ---
 def extract_audio_from_video(video_path):
-    output_path = video_path.replace('.mp4', '.wav')
+    output_path = video_path.replace(".mp4", ".wav")
     video = VideoFileClip(video_path)
     video.audio.write_audiofile(output_path)
     return output_path
 
+
 # --- transcribe_audio ---
 model = whisper.load_model("base")
+
+
 def transcribe_audio(audio_path):
     result = model.transcribe(audio_path)
     segments = result.get("segments", [])
     transcript = []
     for seg in segments:
-        transcript.append({
-            "start": seg["start"],
-            "end": seg["end"],
-            "text": seg["text"]
-        })
+        transcript.append(
+            {"start": seg["start"], "end": seg["end"], "text": seg["text"]}
+        )
     return transcript
 
+
 # --- find_parasites ---
-BADWORD_RE_RU = re.compile(r'\b[а-яА-ЯёЁ]+\b', re.IGNORECASE)
-BADWORD_RE_EN = re.compile(r'\b[a-zA-Z]+\b', re.IGNORECASE)
+BADWORD_RE_RU = re.compile(r"\b[а-яА-ЯёЁ]+\b", re.IGNORECASE)
+BADWORD_RE_EN = re.compile(r"\b[a-zA-Z]+\b", re.IGNORECASE)
+
 
 def find_parasites(transcript_segments, threshold_ru=85, threshold_en=90):
     marked = []
     for seg in transcript_segments:
-        text = seg['text']
-        seg_start = seg['start']
-        seg_end = seg['end']
+        text = seg["text"]
+        seg_start = seg["start"]
+        seg_end = seg["end"]
         duration = seg_end - seg_start
         for match in BADWORD_RE_RU.finditer(text):
             word = match.group()
@@ -55,12 +60,14 @@ def find_parasites(transcript_segments, threshold_ru=85, threshold_en=90):
                     end_char = match.end()
                     word_start = seg_start + (start_char / len(text)) * duration
                     word_end = seg_start + (end_char / len(text)) * duration
-                    marked.append({
-                        "start": word_start,
-                        "end": word_end,
-                        "text": word,
-                        "bad_words": [bad]
-                    })
+                    marked.append(
+                        {
+                            "start": word_start,
+                            "end": word_end,
+                            "text": word,
+                            "bad_words": [bad],
+                        }
+                    )
                     break
         for match in BADWORD_RE_EN.finditer(text):
             word = match.group()
@@ -70,23 +77,28 @@ def find_parasites(transcript_segments, threshold_ru=85, threshold_en=90):
                     end_char = match.end()
                     word_start = seg_start + (start_char / len(text)) * duration
                     word_end = seg_start + (end_char / len(text)) * duration
-                    marked.append({
-                        "start": word_start,
-                        "end": word_end,
-                        "text": word,
-                        "bad_words": [bad]
-                    })
+                    marked.append(
+                        {
+                            "start": word_start,
+                            "end": word_end,
+                            "text": word,
+                            "bad_words": [bad],
+                        }
+                    )
                     break
     return marked
 
+
 # --- censor_audio ---
-def censor_audio(audio_path, marks, action="beep", beep_path="sounds/beep.wav", out_format="wav"):
+def censor_audio(
+    audio_path, marks, action="beep", beep_path="sounds/beep.wav", out_format="wav"
+):
     audio = AudioSegment.from_file(audio_path)
     result = AudioSegment.empty()
     current_pos = 0
     for mark in marks:
-        start_ms = int(mark['start'] * 1000)
-        end_ms = int(mark['end'] * 1000)
+        start_ms = int(mark["start"] * 1000)
+        end_ms = int(mark["end"] * 1000)
         result += audio[current_pos:start_ms]
         duration = end_ms - start_ms
         if action == "beep" or action == "funny":
