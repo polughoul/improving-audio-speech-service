@@ -41,7 +41,7 @@ def index():
         filename = request.form.get("file")
         out_format = request.form.get("out_format", "wav")
         action = request.form.get("action", "beep")
-        funny_sound = request.form.get("funny_sound", "sounds/duck.wav")
+        funny_sound = request.form.get("funny_sound", "static/sounds/duck.wav")
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         if filename.lower().endswith((".mp4", ".mov", ".avi", ".mkv")):
             audio_path = extract_audio_from_video(file_path)
@@ -57,7 +57,7 @@ def index():
         if action == "funny":
             beep_path = funny_sound
         else:
-            beep_path = "sounds/beep.wav"
+            beep_path = "static/sounds/beep.wav"
         censored_path = (
             censor_audio(
                 audio_path,

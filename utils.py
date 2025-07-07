@@ -91,7 +91,11 @@ def find_parasites(transcript_segments, threshold_ru=85, threshold_en=90):
 
 # --- censor_audio ---
 def censor_audio(
-    audio_path, marks, action="beep", beep_path="sounds/beep.wav", out_format="wav"
+    audio_path,
+    marks,
+    action="beep",
+    beep_path="static/sounds/beep.wav",
+    out_format="wav",
 ):
     audio = AudioSegment.from_file(audio_path)
     result = AudioSegment.empty()

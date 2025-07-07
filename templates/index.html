@@ -75,9 +75,9 @@
                         <div class="action-col" id="funny-sound-select" style="display:none;">
                             <label for="funny_sound" class="action-label">Select sound:</label>
                             <select name="funny_sound" id="funny_sound" class="action-select">
-                                <option value="sounds/dolphin.wav">dolphin</option>
-                                <option value="sounds/duck.wav">duck</option>
-                                <option value="sounds/nut.wav">nut</option>
+                                <option value="static/sounds/dolphin.wav">dolphin</option>
+                                <option value="static/sounds/duck.wav">duck</option>
+                                <option value="static/sounds/nut.wav">nut</option>
                             </select>
                         </div>
                         <div class="actions-btns">
@@ -124,6 +124,45 @@
             <li>Listen to the result and download the censored file.</li>
         </ol>
     </div>
+    <div class="censor-sounds-demo">
+        <h3>Preview Censoring Sounds</h3>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">BEEP:</div>
+            <audio controls>
+                <source src="/static/sounds/beep.wav" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">Funny: dolphin</div>
+            <audio controls>
+                <source src="/static/sounds/dolphin.wav" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">Funny: duck</div>
+            <audio controls>
+                <source src="/static/sounds/duck.wav" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">Funny: nut</div>
+            <audio controls>
+                <source src="/static/sounds/nut.wav" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">MUTE:</div>
+            <span class="censor-sound-desc">Silence replaces the bad word.</span>
+        </div>
+        <div class="censor-sound-row">
+            <div class="censor-sound-label">CUT:</div>
+            <span class="censor-sound-desc">Bad word is completely removed from the audio.</span>
+        </div>
+    </div>
 
     <!-- Features Section -->
     <div class="features-section">
@@ -156,6 +195,10 @@
             <p>© 2025 AI Speech Cleaner. All rights reserved</p>
         </div>
     </footer>
+    <div id="loading-spinner" class="loading-spinner" style="display:none;">
+        <div class="spinner"></div>
+        <div class="spinner-text">Processing, please wait...</div>
+    </div>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

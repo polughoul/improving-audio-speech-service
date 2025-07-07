@@ -492,3 +492,68 @@ footer {
     color: #222;
     font-size: 1rem;
 }
+
+.censor-sounds-demo {
+    max-width: 900px;
+    margin: 28px auto 0 auto;
+    background: #f8fafc;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    padding: 24px 32px;
+    text-align: left;
+}
+
+.censor-sounds-demo h3 {
+    color: #2563eb;
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.18rem;
+}
+
+.censor-sound-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 12px;
+}
+
+.censor-sound-label {
+    min-width: 110px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.censor-sound-desc {
+    color: #444;
+    font-size: 1rem;
+}
+
+.loading-spinner {
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.75);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    border: 6px solid #e5e7eb;
+    border-top: 6px solid #4f8cff;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 18px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+.spinner-text {
+    color: #2563eb;
+    font-size: 1.15rem;
+    font-weight: 500;
+}

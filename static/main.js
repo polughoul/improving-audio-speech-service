@@ -11,3 +11,15 @@ document.getElementById('action')?.addEventListener('change', function() {
     document.getElementById('funny-sound-select').style.display =
         this.value === 'funny' ? 'block' : 'none';
 });
+
+
+function showSpinner() {
+    document.getElementById('loading-spinner').style.display = 'flex';
+}
+
+document.getElementById('badwords-form')?.addEventListener('submit', function() {
+    showSpinner();
+});
+document.getElementById('marks-form')?.addEventListener('submit', function() {
+    showSpinner();
+});
