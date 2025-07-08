@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, send_from_directory, flash
+from flask import Flask, request, render_template, send_from_directory, flash, jsonify
 import os
+import json
 from utils import (
     extract_audio_from_video,
     transcribe_audio,
@@ -93,8 +94,29 @@ def download_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
 
 
-@app.route("/manual-markup", methods=["GET"])
+@app.route("/manual-markup", methods=["GET", "POST"])
 def manual_markup():
+    if request.method == "POST":
+        file = request.files.get("audio")
+        segments = request.form.get("segments")
+        action = request.form.get("action", "beep")
+        funny_sound = request.form.get("funny_sound", "static/sounds/duck.wav")
+        if not file or not segments:
+            return jsonify({"error": "No file or segments"}), 400
+        filename = file.filename
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(file_path)
+
+        marks = [
+            {"start": float(s["start"]), "end": float(s["end"]), "text": ""}
+            for s in json.loads(segments)
+        ]
+        beep_path = funny_sound if action == "funny" else "static/sounds/beep.wav"
+        censored_path = censor_audio(
+            file_path, marks, action=action, beep_path=beep_path, out_format="wav"
+        )
+        censored_filename = os.path.basename(censored_path)
+        return jsonify({"download_url": f"/download/{censored_filename}"})
     return render_template("manual_markup.html")
 
 

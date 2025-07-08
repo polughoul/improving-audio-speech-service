@@ -9,7 +9,19 @@
 </div>
 <div class="main-wrapper">
     <div class="container">
+        <form id="manual-upload-form" style="margin-bottom: 18px;">
+            <label class="file-upload-label">
+                <input type="file" id="manual-audio-file" accept="audio/*,video/*" required>
+                <span class="file-upload-icon">
+                    <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg>
+                </span>
+                <span id="manual-file-upload-text" class="file-upload-text">Select audio file</span>
+            </label>
+        </form>
         <div id="waveform"></div>
+        <div style="margin: 12px 0;">
+            <button id="play-btn" type="button">Play/Pause</button>
+        </div>
         <div style="margin: 18px 0;">
             <button id="add-segment-btn">Add Segment</button>
             <button id="clear-segments-btn">Clear All</button>
@@ -30,8 +42,13 @@
             </select>
         </div>
         <button id="manual-censor-btn" style="margin-top: 24px;">Censor Selected Segments</button>
+        <form id="manual-censor-form" method="post" enctype="multipart/form-data" style="display:none;">
+            <input type="file" id="manual-audio-upload" name="audio" style="display:none;">
+            <input type="hidden" name="segments" id="segments-json">
+            <input type="hidden" name="action" id="manual-action-hidden">
+            <input type="hidden" name="funny_sound" id="manual-funny-sound-hidden">
+        </form>
+        <div id="manual-download-link"></div>
     </div>
 </div>
-<script src="https://unpkg.com/wavesurfer.js"></script>
-<script src="{{ url_for('static', filename='manual_markup.js') }}"></script>
 {% endblock %}
