@@ -93,6 +93,11 @@ def download_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
 
 
+@app.route("/manual-markup", methods=["GET"])
+def manual_markup():
+    return render_template("manual_markup.html")
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404

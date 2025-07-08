@@ -1,23 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>AI Speech Cleaner</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <a href="{{ url_for('index') }}" class="site-title">AI Speech Cleaner</a>
-            <nav class="main-nav">
-                <a href="#" class="nav-link">page 1</a>
-                <span class="nav-sep"></span>
-                <a href="#" class="nav-link">page 2</a>
-                <span class="nav-sep"></span>
-                <a href="#" class="nav-link">page 3</a>
-            </nav>
-        </div>
-    </header>
+{% extends "base.html" %}
+
+{% block content %}
     <div class="service-title">
         <h1>AI Speech Cleaner</h1>
         <div class="service-desc">
@@ -190,15 +173,8 @@
             </div>
         </div>
     </div>
-    <footer>
-        <div class="footer-content">
-            <p>© 2025 AI Speech Cleaner. All rights reserved</p>
-        </div>
-    </footer>
     <div id="loading-spinner" class="loading-spinner" style="display:none;">
         <div class="spinner"></div>
         <div class="spinner-text">Processing, please wait...</div>
     </div>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
-</body>
-</html>
+{% endblock %}

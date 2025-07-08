@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="service-title">
+    <h1>Manual Audio Markup</h1>
+    <div class="service-desc">
+        Select custom segments in your audio and apply censoring manually.
+    </div>
+</div>
+<div class="main-wrapper">
+    <div class="container">
+        <div id="waveform"></div>
+        <div style="margin: 18px 0;">
+            <button id="add-segment-btn">Add Segment</button>
+            <button id="clear-segments-btn">Clear All</button>
+        </div>
+        <div id="segments-list"></div>
+        <div style="margin-top: 24px;">
+            <label for="manual-action">Censor action:</label>
+            <select id="manual-action">
+                <option value="beep">BEEP</option>
+                <option value="mute">MUTE</option>
+                <option value="cut">CUT</option>
+                <option value="funny">REPLACE TO...</option>
+            </select>
+            <select id="manual-funny-sound" style="display:none;">
+                <option value="static/sounds/dolphin.wav">dolphin</option>
+                <option value="static/sounds/duck.wav">duck</option>
+                <option value="static/sounds/nut.wav">nut</option>
+            </select>
+        </div>
+        <button id="manual-censor-btn" style="margin-top: 24px;">Censor Selected Segments</button>
+    </div>
+</div>
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script src="{{ url_for('static', filename='manual_markup.js') }}"></script>
+{% endblock %}

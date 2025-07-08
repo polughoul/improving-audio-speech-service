@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}AI Speech Cleaner{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="{{ url_for('index') }}" class="site-title">AI Speech Cleaner</a>
+            <nav class="main-nav">
+                <a href="{{ url_for('manual_markup') }}" class="nav-link">Manual Markup</a>
+                <span class="nav-sep"></span>
+                <a href="#" class="nav-link">page 2</a>
+                <span class="nav-sep"></span>
+                <a href="#" class="nav-link">page 3</a>
+            </nav>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 AI Speech Cleaner. All rights reserved</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
