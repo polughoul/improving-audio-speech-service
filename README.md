@@ -1,6 +1,3 @@
-
-
-````markdown
 # AI Speech Cleaner
 
 A service for automatic and manual detection and censoring of profane words in audio and video files.
