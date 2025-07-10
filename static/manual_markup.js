@@ -70,13 +70,16 @@ function addRegion(start, end, color='rgba(79,140,255,0.2)', notDraggable=false)
         drag: !notDraggable,
         resize: !notDraggable
     });
-    // Для кастомного оформления можно добавить класс:
     if (notDraggable) {
         region.element.classList.add('auto-region');
     }
 }
 function clearRegions() {
-    Object.values(wavesurfer.regions.list).forEach(region => region.remove());
+    Object.values(wavesurfer.regions.list).forEach(region => {
+        if (!region.element.classList.contains('auto-region')) {
+            region.remove();
+        }
+    });
 }
 
 document.getElementById('clear-segments-btn').onclick = function() {
