@@ -117,7 +117,27 @@ def manual_markup():
         )
         censored_filename = os.path.basename(censored_path)
         return jsonify({"download_url": f"/download/{censored_filename}"})
-    return render_template("manual_markup.html")
+    filename = request.args.get("file")
+    marks = []
+    if filename:
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        transcript = transcribe_audio(file_path)
+        marks = find_parasites(transcript)
+
+    return render_template("manual_markup.html", marks=marks, filename=filename)
+
+
+@app.route("/detect-badwords", methods=["POST"])
+def detect_badwords():
+    file = request.files.get("audio")
+    if not file:
+        return jsonify({"error": "No file"}), 400
+    filename = file.filename
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(file_path)
+    transcript = transcribe_audio(file_path)
+    marks = find_parasites(transcript)
+    return jsonify({"marks": marks})
 
 
 @app.errorhandler(404)

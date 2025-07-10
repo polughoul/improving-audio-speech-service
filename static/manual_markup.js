@@ -10,15 +10,32 @@ let wavesurfer = WaveSurfer.create({
     ]
 });
 
-document.getElementById('manual-audio-file').addEventListener('change', function(e) {
+document.getElementById('manual-audio-file').addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (file) {
+        showSpinner();
         const url = URL.createObjectURL(file);
         wavesurfer.load(url);
         document.getElementById('manual-file-upload-text').textContent = file.name;
         segments = [];
         clearRegions();
         updateSegmentsList();
+
+        const formData = new FormData();
+        formData.append('audio', file);
+        const resp = await fetch('/detect-badwords', {
+            method: 'POST',
+            body: formData
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.marks && data.marks.length > 0) {
+                data.marks.forEach(mark => {
+                    addRegion(mark.start, mark.end, 'rgba(255,0,0,0.3)', true); // true = not draggable
+                });
+            }
+        }
+        hideSpinner();
     }
 });
 
@@ -45,12 +62,18 @@ document.getElementById('add-segment-btn').onclick = function() {
     }
 };
 
-function addRegion(start, end) {
-    wavesurfer.addRegion({
+function addRegion(start, end, color='rgba(79,140,255,0.2)', notDraggable=false) {
+    let region = wavesurfer.addRegion({
         start: start,
         end: end,
-        color: 'rgba(79,140,255,0.2)'
+        color: color,
+        drag: !notDraggable,
+        resize: !notDraggable
     });
+    // Для кастомного оформления можно добавить класс:
+    if (notDraggable) {
+        region.element.classList.add('auto-region');
+    }
 }
 function clearRegions() {
     Object.values(wavesurfer.regions.list).forEach(region => region.remove());
@@ -113,3 +136,38 @@ document.getElementById('manual-censor-btn').onclick = async function() {
     document.getElementById('manual-censor-btn').disabled = false;
     document.getElementById('manual-censor-btn').textContent = 'Censor Selected Segments';
 };
+
+function showSpinner() {
+    document.getElementById('loading-spinner').style.display = 'flex';
+}
+function hideSpinner() {
+    document.getElementById('loading-spinner').style.display = 'none';
+}
+
+document.getElementById('waveform').addEventListener('wheel', function(e) {
+    e.preventDefault();
+    let minPxPerSec = 20;
+    let maxPxPerSec = 500;
+    let current = wavesurfer.params.minPxPerSec || 100;
+    let delta = e.deltaY < 0 ? 20 : -20;
+    let next = Math.max(minPxPerSec, Math.min(maxPxPerSec, current + delta));
+    wavesurfer.zoom(next);
+    wavesurfer.params.minPxPerSec = next;
+});
+
+let isDragging = false;
+let lastX = 0;
+const wf = document.getElementById('waveform');
+wf.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    lastX = e.pageX;
+});
+window.addEventListener('mousemove', function(e) {
+    if (isDragging) {
+        wf.scrollLeft -= (e.pageX - lastX);
+        lastX = e.pageX;
+    }
+});
+window.addEventListener('mouseup', function() {
+    isDragging = false;
+});

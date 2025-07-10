@@ -589,3 +589,20 @@ footer {
     font-size: 1.08rem;
     color: #222;
 }
+
+.region[data-color="rgba(255,0,0,0.3)"] .region-handle {
+    display: none !important;
+}
+.region[data-color="rgba(255,0,0,0.3)"] {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+
+.region.auto-region .region-handle {
+    display: none !important;
+}
+.region.auto-region {
+    border-left: none !important;
+    border-right: none !important;
+}
