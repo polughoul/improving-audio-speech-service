@@ -381,6 +381,7 @@ footer {
     padding-left: 2px;
 }
 
+
 .action-select, #funny_sound {
     padding: 7px 16px;
     border-radius: 6px;
@@ -390,7 +391,7 @@ footer {
     background: #f8fafc;
     color: #222;
     width: 100%;
-    max-width: 260px;
+    max-width: 180px;
 }
 .actions-row {
     display: flex;
@@ -584,7 +585,11 @@ footer {
     background: #eaf1ff;
     border-radius: 8px;
 }
+
 #segments-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 18px 0;
     font-size: 1.08rem;
     color: #222;

@@ -67,12 +67,14 @@ function addRegion(start, end, color='rgba(79,140,255,0.2)', notDraggable=false)
         start: start,
         end: end,
         color: color,
-        drag: !notDraggable,
-        resize: !notDraggable
+        drag: false,    
+        resize: false    
     });
     if (notDraggable) {
         region.element.classList.add('auto-region');
+        region.resize = false;
     }
+    return region;
 }
 function clearRegions() {
     Object.values(wavesurfer.regions.list).forEach(region => {
@@ -93,8 +95,29 @@ document.getElementById('clear-segments-btn').onclick = function() {
 function updateSegmentsList() {
     const list = document.getElementById('segments-list');
     list.innerHTML = segments.map((s, i) =>
-        `<div>Segment ${i+1}: ${s.start.toFixed(2)} - ${s.end.toFixed(2)} sec</div>`
+        `<div style="display:flex;align-items:center;gap:8px;">
+            Segment ${i+1}: ${s.start.toFixed(2)} - ${s.end.toFixed(2)} sec
+            <span class="delete-segment" data-idx="${i}" style="cursor:pointer;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path stroke="#e53e3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        d="M6 6l12 12M6 18L18 6"/>
+                </svg>
+            </span>
+        </div>`
     ).join('');
+    document.querySelectorAll('.delete-segment').forEach(el => {
+        el.onclick = function() {
+            const idx = parseInt(this.dataset.idx);
+            const seg = segments[idx];
+            Object.values(wavesurfer.regions.list).forEach(region => {
+                if (Math.abs(region.start - seg.start) < 0.01 && Math.abs(region.end - seg.end) < 0.01 && !region.element.classList.contains('auto-region')) {
+                    region.remove();
+                }
+            });
+            segments.splice(idx, 1);
+            updateSegmentsList();
+        };
+    });
 }
 
 document.getElementById('manual-action').onchange = function() {
@@ -132,7 +155,13 @@ document.getElementById('manual-censor-btn').onclick = async function() {
     if (resp.ok) {
         const data = await resp.json();
         document.getElementById('manual-download-link').innerHTML =
-            `<a href="${data.download_url}" class="download-btn" download>Download censored file</a>`;
+            `<div class="audio-download-block" style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                <audio controls style="margin-top:18px;">
+                    <source src="${data.download_url}" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+                <a href="${data.download_url}" class="download-btn" download>Download censored file</a>
+            </div>`;
     } else {
         alert('Error processing audio');
     }
