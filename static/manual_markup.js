@@ -94,7 +94,8 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
                         WaveSurfer.regions.create()
                     ]
                 });
-                ws.load(speaker_files[spk]);
+                const spkFileName = speaker_files[spk].split(/[\\/]/).pop();
+                ws.load(`/uploads/${spkFileName}`);
                 badwords.forEach(mark => {
                     ws.addRegion({
                         start: mark.start,

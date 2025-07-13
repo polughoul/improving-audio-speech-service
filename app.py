@@ -96,6 +96,11 @@ def download_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
 
 
+@app.route("/uploads/<path:filename>")
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+
 @app.route("/manual-markup", methods=["GET", "POST"])
 def manual_markup():
     if request.method == "POST":
