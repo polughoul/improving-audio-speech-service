@@ -143,7 +143,7 @@ def diarize_audio(audio_path):
         if speaker not in speakers:
             speakers[speaker] = []
         speakers[speaker].append({"start": turn.start, "end": turn.end})
-    return speakers  # dict: {speaker: [ {start, end}, ... ]}
+    return speakers
 
 
 def split_audio_by_speakers(audio_path, speakers):

@@ -31,6 +31,19 @@
         <div id="waveform"></div>
         <div style="margin: 12px 0;">
             <button id="play-btn" type="button">Play/Pause</button>
+            <label style="margin-left:12px;">Speed:
+                <select id="speed-main">
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </label>
+            <label style="margin-left:12px;">Volume:
+                <input id="volume-main" type="range" min="0" max="1" step="0.01" value="1" style="width:80px;">
+            </label>
         </div>
         <div id="speaker-waveforms"></div>
         <div style="margin: 18px 0;">

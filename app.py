@@ -150,21 +150,15 @@ def diarize():
     filename = file.filename
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)
-
-    # Диаризация
     speakers = diarize_audio(file_path)
 
-    # Если только один спикер, не делим аудио
     if len(speakers) <= 1:
         return jsonify({"speakers": speakers, "speaker_files": {}})
 
-    # Разделяем аудио по спикерам (может быть медленно!)
     try:
         speaker_files = split_audio_by_speakers(file_path, speakers)
     except Exception as e:
         return jsonify({"error": f"Split error: {str(e)}"}), 500
-
-    # Возвращаем интервалы и ссылки на аудиофайлы каждого спикера
     return jsonify({"speakers": speakers, "speaker_files": speaker_files})
 
 

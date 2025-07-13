@@ -20,7 +20,6 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
         clearRegions();
         updateSegmentsList();
 
-        // Диаризация
         const formData = new FormData();
         formData.append('audio', file);
         const resp = await fetch('/diarize', {
@@ -35,7 +34,6 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
             speaker_files = data.speaker_files;
         }
 
-        // Детектим маты
         const respBad = await fetch('/detect-badwords', {
             method: 'POST',
             body: formData
@@ -49,7 +47,6 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
         const container = document.getElementById('speaker-waveforms');
         container.innerHTML = '';
 
-        // Если несколько спикеров и есть файлы для них
         if (speakers && Object.keys(speakers).length > 1 && speaker_files) {
             document.getElementById('waveform').style.display = 'none';
             document.getElementById('play-btn').style.display = 'none';
@@ -66,6 +63,19 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
                         <div id="${wfId}" style="height:90px;"></div>
                         <div style="margin-top:8px;">
                             <button id="play-btn-${wfId}" type="button">Play/Pause</button>
+                            <label style="margin-left:12px;">Speed:
+                                <select id="speed-${wfId}">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.25">1.25x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </label>
+                            <label style="margin-left:12px;">Volume:
+                                <input id="volume-${wfId}" type="range" min="0" max="1" step="0.01" value="1" style="width:80px;">
+                            </label>
                         </div>
                     </div>`;
             });
@@ -96,10 +106,15 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
                 });
                 setTimeout(() => {
                     document.getElementById(`play-btn-${wfId}`).onclick = () => ws.playPause();
+                    document.getElementById(`speed-${wfId}`).onchange = function() {
+                        ws.setPlaybackRate(parseFloat(this.value));
+                    };
+                    document.getElementById(`volume-${wfId}`).oninput = function() {
+                        ws.setVolume(parseFloat(this.value));
+                    };
                 }, 500);
             });
         } else {
-            // Один спикер — обычная дорожка
             document.getElementById('waveform').style.display = '';
             document.getElementById('play-btn').style.display = '';
             document.getElementById('add-segment-btn').style.display = '';
@@ -117,6 +132,13 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
 
 document.getElementById('play-btn').onclick = function() {
     wavesurfer.playPause();
+};
+
+document.getElementById('speed-main').onchange = function() {
+    wavesurfer.setPlaybackRate(parseFloat(this.value));
+};
+document.getElementById('volume-main').oninput = function() {
+    wavesurfer.setVolume(parseFloat(this.value));
 };
 
 let segments = [];
