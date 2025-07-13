@@ -15,25 +15,101 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
     if (file) {
         showSpinner();
         const url = URL.createObjectURL(file);
-        wavesurfer.load(url);
         document.getElementById('manual-file-upload-text').textContent = file.name;
         segments = [];
         clearRegions();
         updateSegmentsList();
 
+        // Диаризация
         const formData = new FormData();
         formData.append('audio', file);
-        const resp = await fetch('/detect-badwords', {
+        const resp = await fetch('/diarize', {
             method: 'POST',
             body: formData
         });
+        let speakers = null;
+        let speaker_files = null;
         if (resp.ok) {
             const data = await resp.json();
-            if (data.marks && data.marks.length > 0) {
-                data.marks.forEach(mark => {
-                    addRegion(mark.start, mark.end, 'rgba(255,0,0,0.3)', true); // true = not draggable
+            speakers = data.speakers;
+            speaker_files = data.speaker_files;
+        }
+
+        // Детектим маты
+        const respBad = await fetch('/detect-badwords', {
+            method: 'POST',
+            body: formData
+        });
+        let badwords = [];
+        if (respBad.ok) {
+            const data = await respBad.json();
+            badwords = data.marks || [];
+        }
+
+        const container = document.getElementById('speaker-waveforms');
+        container.innerHTML = '';
+
+        // Если несколько спикеров и есть файлы для них
+        if (speakers && Object.keys(speakers).length > 1 && speaker_files) {
+            document.getElementById('waveform').style.display = 'none';
+            document.getElementById('play-btn').style.display = 'none';
+            document.getElementById('add-segment-btn').style.display = '';
+            document.getElementById('clear-segments-btn').style.display = '';
+            document.getElementById('segments-list').style.display = '';
+
+            let html = '';
+            Object.keys(speakers).forEach((spk, idx) => {
+                const wfId = `waveform-speaker-${idx}`;
+                html += `
+                    <div style="margin:18px 0;">
+                        <b>Speaker ${spk}</b>
+                        <div id="${wfId}" style="height:90px;"></div>
+                        <div style="margin-top:8px;">
+                            <button id="play-btn-${wfId}" type="button">Play/Pause</button>
+                        </div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+
+            Object.keys(speakers).forEach((spk, idx) => {
+                const wfId = `waveform-speaker-${idx}`;
+                let ws = WaveSurfer.create({
+                    container: `#${wfId}`,
+                    waveColor: ['#4f8cff', '#2563eb', '#2ecc40'][idx % 3],
+                    progressColor: '#2563eb',
+                    height: 90,
+                    responsive: true,
+                    backend: 'MediaElement',
+                    plugins: [
+                        WaveSurfer.regions.create()
+                    ]
                 });
-            }
+                ws.load(speaker_files[spk]);
+                badwords.forEach(mark => {
+                    ws.addRegion({
+                        start: mark.start,
+                        end: mark.end,
+                        color: 'rgba(255,0,0,0.3)',
+                        drag: false,
+                        resize: false
+                    });
+                });
+                setTimeout(() => {
+                    document.getElementById(`play-btn-${wfId}`).onclick = () => ws.playPause();
+                }, 500);
+            });
+        } else {
+            // Один спикер — обычная дорожка
+            document.getElementById('waveform').style.display = '';
+            document.getElementById('play-btn').style.display = '';
+            document.getElementById('add-segment-btn').style.display = '';
+            document.getElementById('clear-segments-btn').style.display = '';
+            document.getElementById('segments-list').style.display = '';
+            container.innerHTML = '';
+            wavesurfer.load(url);
+            badwords.forEach(mark => {
+                addRegion(mark.start, mark.end, 'rgba(255,0,0,0.3)', true);
+            });
         }
         hideSpinner();
     }

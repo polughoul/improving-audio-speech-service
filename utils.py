@@ -5,8 +5,10 @@ import whisper
 from rapidfuzz import fuzz
 import re
 from pydub import AudioSegment
+from pyannote.audio import Pipeline
 
 ALLOWED_EXTENSIONS = {"wav", "mp3", "ogg", "flac", "mp4", "mov", "avi", "mkv"}
+DIARIZATION_TOKEN = "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"
 
 
 # --- load badwords from JSON ---
@@ -129,3 +131,31 @@ def censor_audio(
 # --- validation for input file  ---
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def diarize_audio(audio_path):
+    pipeline = Pipeline.from_pretrained(
+        "pyannote/speaker-diarization", use_auth_token=DIARIZATION_TOKEN
+    )
+    diarization = pipeline(audio_path)
+    speakers = {}
+    for turn, _, speaker in diarization.itertracks(yield_label=True):
+        if speaker not in speakers:
+            speakers[speaker] = []
+        speakers[speaker].append({"start": turn.start, "end": turn.end})
+    return speakers  # dict: {speaker: [ {start, end}, ... ]}
+
+
+def split_audio_by_speakers(audio_path, speakers):
+    audio = AudioSegment.from_file(audio_path)
+    speaker_files = {}
+    for spk, segments in speakers.items():
+        spk_audio = AudioSegment.empty()
+        for seg in segments:
+            start_ms = int(seg["start"] * 1000)
+            end_ms = int(seg["end"] * 1000)
+            spk_audio += audio[start_ms:end_ms]
+        out_path = f"{audio_path}_spk_{spk}.wav"
+        spk_audio.export(out_path, format="wav")
+        speaker_files[spk] = out_path
+    return speaker_files

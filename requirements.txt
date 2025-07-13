@@ -3,3 +3,4 @@ moviepy
 pydub
 openai-whisper
 rapidfuzz
+pyannote.audio
