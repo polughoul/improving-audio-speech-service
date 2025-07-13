@@ -154,6 +154,7 @@ document.getElementById('add-segment-btn').onclick = function() {
             segments.push({start: regionStart, end: end});
             addRegion(regionStart, end);
             updateSegmentsList();
+            document.getElementById('manual-download-link').innerHTML = ''; 
         }
         regionStart = null;
         this.textContent = "Add Segment";
@@ -188,6 +189,7 @@ document.getElementById('clear-segments-btn').onclick = function() {
     updateSegmentsList();
     regionStart = null;
     document.getElementById('add-segment-btn').textContent = "Add Segment";
+    document.getElementById('manual-download-link').innerHTML = ''; 
 };
 
 function updateSegmentsList() {
@@ -203,6 +205,7 @@ function updateSegmentsList() {
             </span>
         </div>`
     ).join('');
+    document.getElementById('manual-download-link').innerHTML = ''; // очищаем превью
     document.querySelectorAll('.delete-segment').forEach(el => {
         el.onclick = function() {
             const idx = parseInt(this.dataset.idx);
