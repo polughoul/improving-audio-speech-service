@@ -111,7 +111,7 @@ def manual_markup():
 
         marks = [
             {"start": float(s["start"]), "end": float(s["end"]), "text": ""}
-            for s in json.loads(segments)
+            for s in sorted(json.loads(segments), key=lambda x: x["start"])
         ]
         beep_path = funny_sound if action == "funny" else "static/sounds/beep.wav"
         censored_path = censor_audio(
