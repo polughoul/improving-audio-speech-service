@@ -49,7 +49,7 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
         const container = document.getElementById('speaker-waveforms');
         container.innerHTML = '';
 
-        if (speakers && Object.keys(speakers).length > 1 && speaker_files) {
+        if (splitSpeakers && speakers && Object.keys(speakers).length > 1 && speaker_files && Object.keys(speaker_files).length >0) {
             document.getElementById('waveform').style.display = 'none';
             document.getElementById('play-btn').style.display = 'none';
             document.getElementById('add-segment-btn').style.display = '';
