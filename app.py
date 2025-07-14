@@ -9,6 +9,7 @@ from utils import (
     allowed_file,
     diarize_audio,
     split_audio_by_speakers,
+    merge_audio_files,
 )
 
 app = Flask(__name__)
@@ -150,12 +151,15 @@ def detect_badwords():
 @app.route("/diarize", methods=["POST"])
 def diarize():
     file = request.files.get("audio")
+    split_speakers = request.form.get("split_speakers", "0") == "1"
     if not file:
         return jsonify({"error": "No file"}), 400
     filename = file.filename
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)
     speakers = diarize_audio(file_path)
+    if not split_speakers or len(speakers) <= 1:
+        return jsonify({"speakers": speakers, "speaker_files": {}})
 
     if len(speakers) <= 1:
         return jsonify({"speakers": speakers, "speaker_files": {}})
@@ -165,6 +169,19 @@ def diarize():
     except Exception as e:
         return jsonify({"error": f"Split error: {str(e)}"}), 500
     return jsonify({"speakers": speakers, "speaker_files": speaker_files})
+
+
+@app.route("/merge-speakers", methods=["POST"])
+def merge_speakers():
+    files = json.loads(request.form.get("files", "[]"))
+    if not files or not isinstance(files, list):
+        return jsonify({"error": "No files"}), 400
+    file_paths = [os.path.join(UPLOAD_FOLDER, f) for f in files]
+    out_path = os.path.join(UPLOAD_FOLDER, f"merged_{int(time.time())}.wav")
+
+    merged = merge_audio_files(file_paths, out_path)
+    merged_filename = os.path.basename(merged)
+    return jsonify({"download_url": f"/download/{merged_filename}"})
 
 
 @app.errorhandler(404)

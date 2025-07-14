@@ -8,7 +8,7 @@ from pydub import AudioSegment
 from pyannote.audio import Pipeline
 
 ALLOWED_EXTENSIONS = {"wav", "mp3", "ogg", "flac", "mp4", "mov", "avi", "mkv"}
-DIARIZATION_TOKEN = "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"
+DIARIZATION_TOKEN = "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"
 
 
 # --- load badwords from JSON ---
@@ -159,3 +159,11 @@ def split_audio_by_speakers(audio_path, speakers):
         spk_audio.export(out_path, format="wav")
         speaker_files[spk] = out_path
     return speaker_files
+
+
+def merge_audio_files(file_list, out_path):
+    combined = AudioSegment.empty()
+    for f in file_list:
+        combined += AudioSegment.from_file(f)
+    combined.export(out_path, format="wav")
+    return out_path

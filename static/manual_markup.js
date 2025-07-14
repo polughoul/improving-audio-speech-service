@@ -12,6 +12,7 @@ let wavesurfer = WaveSurfer.create({
 
 document.getElementById('manual-audio-file').addEventListener('change', async function(e) {
     const file = e.target.files[0];
+    const splitSpeakers = document.getElementById('split-speakers-checkbox').checked;
     if (file) {
         showSpinner();
         const url = URL.createObjectURL(file);
@@ -22,6 +23,7 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
 
         const formData = new FormData();
         formData.append('audio', file);
+        formData.append('split_speakers', splitSpeakers ? '1' : '0');
         const resp = await fetch('/diarize', {
             method: 'POST',
             body: formData
@@ -58,7 +60,7 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
             Object.keys(speakers).forEach((spk, idx) => {
                 const wfId = `waveform-speaker-${idx}`;
                 html += `
-                    <div style="margin:18px 0;">
+                    <div style="margin:24px 0;padding:18px;border:1px solid #e5e7eb;border-radius:8px;">
                         <b>Speaker ${spk}</b>
                         <div id="${wfId}" style="height:90px;"></div>
                         <div style="margin-top:8px;">
@@ -77,9 +79,35 @@ document.getElementById('manual-audio-file').addEventListener('change', async fu
                                 <input id="volume-${wfId}" type="range" min="0" max="1" step="0.01" value="1" style="width:80px;">
                             </label>
                         </div>
+                        <div style="margin: 18px 0;">
+                            <button id="add-segment-btn-${wfId}">Add Segment</button>
+                            <button id="clear-segments-btn-${wfId}">Clear All</button>
+                        </div>
+                        <div id="segments-list-${wfId}"></div>
+                        <div style="margin-top: 24px;">
+                            <label>Censor action:</label>
+                            <select id="manual-action-${wfId}" class="action-select">
+                                <option value="beep">BEEP</option>
+                                <option value="mute">MUTE</option>
+                                <option value="cut">CUT</option>
+                                <option value="funny">REPLACE TO...</option>
+                            </select>
+                            <select id="manual-funny-sound-${wfId}" style="display:none;" class="action-select">
+                                <option value="static/sounds/dolphin.wav">dolphin</option>
+                                <option value="static/sounds/duck.wav">duck</option>
+                                <option value="static/sounds/nut.wav">nut</option>
+                            </select>
+                        </div>
+                        <button id="manual-censor-btn-${wfId}" style="margin-top: 24px;">Censor Selected Segments</button>
+                        <div id="manual-download-link-${wfId}"></div>
                     </div>`;
+                    container.innerHTML += `
+                        <button id="merge-speaker-files-btn" style="margin-top:32px;">Merge All Speakers</button>
+                        <div id="merged-download-link"></div>
+                    `;
             });
             container.innerHTML = html;
+            
 
             Object.keys(speakers).forEach((spk, idx) => {
                 const wfId = `waveform-speaker-${idx}`;
@@ -206,7 +234,7 @@ function updateSegmentsList() {
             </span>
         </div>`
     ).join('');
-    document.getElementById('manual-download-link').innerHTML = ''; // очищаем превью
+    document.getElementById('manual-download-link').innerHTML = '';
     document.querySelectorAll('.delete-segment').forEach(el => {
         el.onclick = function() {
             const idx = parseInt(this.dataset.idx);
@@ -305,3 +333,32 @@ window.addEventListener('mousemove', function(e) {
 window.addEventListener('mouseup', function() {
     isDragging = false;
 });
+
+document.getElementById('merge-speaker-files-btn').onclick = async function() {
+    showSpinner();
+    let processedFiles = [];
+    Object.keys(speakers).forEach((spk, idx) => {
+        const link = document.querySelector(`#manual-download-link-waveform-speaker-${idx} a.download-btn`);
+        if (link) processedFiles.push(link.getAttribute('href').replace('/download/', ''));
+    });
+    const formData = new FormData();
+    formData.append('files', JSON.stringify(processedFiles));
+    const resp = await fetch('/merge-speakers', {
+        method: 'POST',
+        body: formData
+    });
+    if (resp.ok) {
+        const data = await resp.json();
+        document.getElementById('merged-download-link').innerHTML =
+            `<div class="audio-download-block" style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                <audio controls style="margin-top:18px;">
+                    <source src="${data.download_url}" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+                <a href="${data.download_url}" class="download-btn" download>Download merged file</a>
+            </div>`;
+    } else {
+        alert('Error merging files');
+    }
+    hideSpinner();
+};

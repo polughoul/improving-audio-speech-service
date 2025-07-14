@@ -20,11 +20,13 @@
     </div>
     <div class="container">
         <form id="manual-upload-form" style="margin-bottom: 18px;">
+            <label style="display:flex;align-items:center;gap:12px;">
+                <input type="checkbox" id="split-speakers-checkbox" style="width:18px;height:18px;">
+                <span style="font-size:1.08rem;">Split speakers</span>
+            </label>
             <label class="file-upload-label">
                 <input type="file" id="manual-audio-file" accept="audio/*,video/*" required>
-                <span class="file-upload-icon">
-                    <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg>
-                </span>
+                <span class="file-upload-icon"> <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path fill="#4f8cff" d="M12 16a1 1 0 0 1-1-1V5.41l-3.3 3.3a1 1 0 1 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42l-3.3-3.3V15a1 1 0 0 1-1 1Zm-7 4a1 1 0 0 1 0-2h14a1 1 0 1 1 0 2H5Z"/></svg> </span>
                 <span id="manual-file-upload-text" class="file-upload-text">Select audio file</span>
             </label>
         </form>
