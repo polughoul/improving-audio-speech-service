@@ -1,3 +1,6 @@
+/* =========================
+   1. Base & Layout
+   ========================= */
 body {
     font-family: Arial, sans-serif;
     background: #f8fafc;
@@ -8,6 +11,9 @@ body {
     flex-direction: column;
 }
 
+/* =========================
+   2. Header & Navigation
+   ========================= */
 header {
     width: 100%;
     background: #fff;
@@ -15,7 +21,6 @@ header {
     padding: 0;
     margin: 0;
 }
-
 .header-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -24,13 +29,11 @@ header {
     align-items: center;
     justify-content: space-between;
 }
-
 .main-nav {
     display: flex;
     align-items: center;
     gap: 0;
 }
-
 .nav-link {
     color: #222;
     text-decoration: none;
@@ -38,11 +41,9 @@ header {
     padding: 0 18px;
     transition: color 0.2s;
 }
-
 .nav-link:hover {
     color: #4f8cff;
 }
-
 .nav-sep {
     display: inline-block;
     width: 1px;
@@ -50,7 +51,6 @@ header {
     background: #e5e7eb;
     margin: 0 2px;
 }
-
 .site-title {
     color: #222;
     text-decoration: none;
@@ -59,40 +59,41 @@ header {
     letter-spacing: 1px;
     transition: color 0.2s;
 }
-
 .site-title:hover {
     color: #4f8cff;
 }
 
+/* =========================
+   3. Main Wrapper & Container
+   ========================= */
 .main-wrapper {
     flex: 1 0 auto;
-    display: block; 
-    min-height: 0; 
+    display: block;
+    min-height: 0;
     align-items: unset;
     justify-content: unset;
 }
-
-
 .container {
     width: 900px;
     min-height: 240px;
-    margin: 24px auto 0 auto;  
+    margin: 24px auto 0 auto;
     background: #fff;
     padding: 36px 48px;
     border-radius: 18px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.10);
     text-align: center;
     display: block;
-    margin-bottom: 24px;        
+    margin-bottom: 24px;
 }
 
-
+/* =========================
+   4. Titles & Descriptions
+   ========================= */
 .service-title {
     text-align: center;
-    margin-top: 24px;    
-    margin-bottom: 18px; 
+    margin-top: 24px;
+    margin-bottom: 18px;
 }
-
 .service-title h1 {
     font-size: 2.4rem;
     font-weight: bold;
@@ -104,28 +105,27 @@ header {
     color: #444;
     margin-bottom: 0;
 }
-
 h2 {
     margin-top: 32px;
 }
 
+/* =========================
+   5. Forms & Inputs
+   ========================= */
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 14px;
 }
-
 input[type="file"] {
     margin-bottom: 8px;
 }
-
 label[for="out_format"] {
     margin-bottom: 4px;
     font-size: 15px;
     color: #222;
 }
-
 select#out_format {
     padding: 7px 16px;
     border-radius: 6px;
@@ -136,6 +136,9 @@ select#out_format {
     color: #222;
 }
 
+/* =========================
+   6. Audio Player & Buttons
+   ========================= */
 audio {
     margin-top: 12px;
     margin-bottom: 18px;
@@ -144,7 +147,6 @@ audio {
     max-width: 100%;
     width: 350px !important;
 }
-
 button {
     background: #4f8cff;
     color: #fff;
@@ -155,18 +157,15 @@ button {
     font-size: 16px;
     margin-top: 9px;
 }
-
 button:hover {
     background: #2563eb;
 }
-
 .audio-download-block {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
 }
-
 .download-btn {
     display: inline-block;
     margin-top: 0px;
@@ -183,6 +182,9 @@ button:hover {
     background: #4f8cff;
 }
 
+/* =========================
+   7. Flash Messages
+   ========================= */
 .flashes {
     color: #e53e3e;
     margin-top: 16px;
@@ -190,11 +192,9 @@ button:hover {
     padding: 0;
 }
 
-
-.file-upload-label:hover {
-    border: 1.5px solid #4f8cff;
-}
-
+/* =========================
+   8. File Upload Block
+   ========================= */
 .file-upload-label {
     position: relative;
     display: flex;
@@ -210,6 +210,9 @@ button:hover {
     color: #222;
     min-width: 120px;
 }
+.file-upload-label:hover {
+    border: 1.5px solid #4f8cff;
+}
 .file-upload-label input[type="file"] {
     position: absolute;
     left: 0; top: 0;
@@ -218,7 +221,6 @@ button:hover {
     cursor: pointer;
     z-index: 2;
 }
-
 .file-upload-text {
     margin-top: 6px;
     font-size: 1.08rem;
@@ -226,18 +228,19 @@ button:hover {
     text-align: center;
     min-width: 80px;
 }
-
 .file-upload-icon {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* =========================
+   9. Upload Form Columns
+   ========================= */
 .upload-form-col label,
 .upload-form-col select {
     font-size: 1.15rem;
 }
-
 .upload-form-col {
     display: flex;
     flex-direction: column;
@@ -245,6 +248,9 @@ button:hover {
     gap: 6px;
 }
 
+/* =========================
+   10. Badwords Form
+   ========================= */
 #badwords-form {
     display: flex;
     flex-direction: row;
@@ -255,7 +261,6 @@ button:hover {
     flex-wrap: wrap;
     width: 100%;
 }
-
 @media (max-width: 700px) {
     #badwords-form {
         flex-direction: column;
@@ -263,7 +268,6 @@ button:hover {
         gap: 18px;
     }
 }
-
 #badwords-form .file-upload-label svg {
     width: 36px;
     height: 36px;
@@ -272,7 +276,6 @@ button:hover {
     font-size: 1.1rem;
     padding: 12px 24px;
 }
-
 #badwords-form button {
     font-size: 1.15rem;
     padding: 12px 32px;
@@ -280,19 +283,20 @@ button:hover {
     align-self: center;
 }
 
-
+/* =========================
+   11. Marks List (Detected Bad Words)
+   ========================= */
 #marks-list {
     list-style: none;
     padding: 0;
     margin: 0 auto 32px auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px 32px; 
+    gap: 24px 32px;
     max-width: 900px;
     justify-content: center;
     justify-items: center;
 }
-
 #marks-list li {
     background: #f5f7fa;
     border-radius: 6px;
@@ -307,21 +311,18 @@ button:hover {
     text-align: left;
     box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
-
 #marks-list input[type="checkbox"] {
     margin-right: 10px;
     accent-color: #4f8cff;
     width: 18px;
     height: 18px;
 }
-
 #marks-form button[type="button"],
 #marks-form button[type="submit"] {
     margin-top: 0;
     margin-right: 12px;
     min-width: 140px;
 }
-
 #marks-form button[type="submit"] {
     margin-right: 0;
 }
@@ -332,8 +333,9 @@ button:hover {
     align-items: center;
 }
 
-
-
+/* =========================
+   12. Footer
+   ========================= */
 footer {
     width: 100%;
     background: #1e2a44;
@@ -345,13 +347,15 @@ footer {
     left: 0;
     bottom: 0;
 }
-
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
     font-size: 15px;
 }
 
+/* =========================
+   13. Action Selects & Buttons
+   ========================= */
 .action-select {
     margin-bottom: 18px;
     margin-top: 0;
@@ -360,16 +364,14 @@ footer {
     align-self: center;
     text-align: left;
 }
-
 .action-col {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     min-width: 180px;
     width: 100%;
     margin-bottom: 0;
 }
-
 .action-label {
     margin-top: 12px;
     margin-bottom: 4px;
@@ -380,8 +382,6 @@ footer {
     width: 100%;
     padding-left: 2px;
 }
-
-
 .action-select, #funny_sound {
     padding: 7px 16px;
     border-radius: 6px;
@@ -401,8 +401,6 @@ footer {
     margin-bottom: 18px;
     width: 100%;
 }
-
-
 #funny-sound-select {
     margin-top: 0;
     margin-bottom: 8px;
@@ -417,14 +415,14 @@ footer {
     width: 100%;
     margin-top: 18px;
 }
-
 .actions-btns button {
     min-width: 140px;
     font-size: 1.08rem;
 }
 
-/* Tutorial section styles */
-
+/* =========================
+   14. Tutorial & Features Sections
+   ========================= */
 .tutorial-section {
     max-width: 900px;
     margin: 0 auto 0 auto;
@@ -434,40 +432,34 @@ footer {
     padding: 24px 32px;
     text-align: left;
 }
-
 .tutorial-section h2 {
     margin-top: 0;
     color: #2563eb;
     font-size: 1.5rem;
     margin-bottom: 18px;
 }
-
 .tutorial-steps {
     margin: 0;
     padding-left: 22px;
     font-size: 1.08rem;
     color: #222;
 }
-
 .features-section {
     max-width: 900px;
     margin: 36px auto 0 auto;
     text-align: left;
 }
-
 .features-section h2 {
     color: #2563eb;
     font-size: 1.5rem;
     margin-bottom: 18px;
 }
-
 .features-list {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
     justify-content: center;
 }
-
 .feature-card {
     background: #eaf1ff;
     border-radius: 10px;
@@ -481,19 +473,20 @@ footer {
     flex-direction: column;
     align-items: flex-start;
 }
-
 .feature-title {
     font-weight: bold;
     color: #2563eb;
     margin-bottom: 8px;
     font-size: 1.08rem;
 }
-
 .feature-desc {
     color: #222;
     font-size: 1rem;
 }
 
+/* =========================
+   15. Censor Sounds Demo
+   ========================= */
 .censor-sounds-demo {
     max-width: 900px;
     margin: 28px auto 0 auto;
@@ -503,32 +496,31 @@ footer {
     padding: 24px 32px;
     text-align: left;
 }
-
 .censor-sounds-demo h3 {
     color: #2563eb;
     margin-top: 0;
     margin-bottom: 18px;
     font-size: 1.18rem;
 }
-
 .censor-sound-row {
     display: flex;
     align-items: center;
     gap: 18px;
     margin-bottom: 12px;
 }
-
 .censor-sound-label {
     min-width: 130px;
     font-weight: bold;
     color: #2563eb;
 }
-
 .censor-sound-desc {
     color: #444;
     font-size: 1rem;
 }
 
+/* =========================
+   16. Loading Spinner
+   ========================= */
 .loading-spinner {
     position: fixed;
     z-index: 9999;
@@ -539,7 +531,6 @@ footer {
     align-items: center;
     justify-content: center;
 }
-
 .spinner {
     border: 6px solid #e5e7eb;
     border-top: 6px solid #4f8cff;
@@ -559,7 +550,9 @@ footer {
     font-weight: 500;
 }
 
-
+/* =========================
+   17. Error Pages
+   ========================= */
 .error-page {
     max-width: 420px;
     margin: 80px auto 0 auto;
@@ -580,12 +573,14 @@ footer {
     margin-bottom: 24px;
 }
 
+/* =========================
+   18. Waveform & Regions
+   ========================= */
 #waveform {
     margin: 32px 0 18px 0;
     background: #eaf1ff;
     border-radius: 8px;
 }
-
 #segments-list {
     display: flex;
     flex-direction: column;
@@ -594,7 +589,6 @@ footer {
     font-size: 1.08rem;
     color: #222;
 }
-
 .region[data-color="rgba(255,0,0,0.3)"] .region-handle {
     display: none !important;
 }
@@ -602,8 +596,6 @@ footer {
     border-left: none !important;
     border-right: none !important;
 }
-
-
 .region.auto-region .region-handle {
     display: none !important;
 }
